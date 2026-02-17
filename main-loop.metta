@@ -41,19 +41,19 @@
 !(add-atom &kb (Sentence (cat (stv 0.6 0.99)) (33)))
 !(add-atom &kb (Sentence (animal (stv 0.7 0.7)) (3345)))
 
-!(pln-bc &kb  bite (S  Z) ())
+; !(pln-bc &kb  bite (S  Z) ())
 ; ; !(pln-bc &kb dog Z ())
 ; !(match &kb ($_ (bite $stv) $v) ($_ (bite $stv) $v))
 
-; !(add-atom &kb (Sentence ((Inheritance slippery fall) (stv 0.45 0.752))  (2)))         
-; !(add-atom &kb (Sentence ((Inheritance rain slippery) (stv 0.7 0.8))  (545)))         
-; !(add-atom &kb (Sentence (rain (stv 0.9 0.8)) (3)))               
-; !(add-atom &kb (Sentence (slippery (stv 0.7 0.8)) (4)))               
-; !(add-atom &kb (Sentence (fall (stv 0.5 0.3)) (5)))   
+!(add-atom &kb (Sentence ((Inheritance slippery fall) (stv 0.45 0.752))  (2)))         
+!(add-atom &kb (Sentence ((Inheritance rain slippery) (stv 0.7 0.8))  (545)))         
+!(add-atom &kb (Sentence (rain (stv 0.9 0.8)) (3)))               
+!(add-atom &kb (Sentence (slippery (stv 0.7 0.8)) (4)))               
+!(add-atom &kb (Sentence (fall (stv 0.5 0.3)) (5)))   
 
 !(add-atom &kb (Sentence (animal (stv 0.6 0.7)) (1435)))
 !(add-atom &kb (Sentence ((Inheritance animal cat) (stv 0.6 0.7)) (1)))
 
 ; !(pln-bc &kb (Inheritance cat animal) (S (S Z)) ())   
 
-; !(pln-bc &kb (Inheritance rain fall) (S (S Z)) ())
+!(pln-bc &kb (Inheritance rain fall) (S (S Z)) ())

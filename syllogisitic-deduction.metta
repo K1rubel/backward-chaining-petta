@@ -1,5 +1,5 @@
 ; !(import! &self ../backward-chaining/forward-chaining-pln)
-(= (syllo-deduction $goal $kb (S $k) $ev)
+(= (syllo-deduction $kb $goal (S $k) $ev)
     (let ($LinkType $A $C) $goal
             (match $kb (Sentence (($LinkType $B $C) $stv-bc) $ev-bc)
                 (if (and (SyllogisticRuleGuard $LinkType)
@@ -8,7 +8,6 @@
                                 ($_ (println! (next ev $next-ev)))
                               ;; Recurse to prove the missing link A -> B
                                 ((Sentence (($LinkType $A $B) $stv-ab) $ev-premise) (pln-bc $kb ($LinkType $A $B) $k $next-ev))
-                                ; (Sentence ((Inheritance rain slippery) (stv 0.46 0.84)) (21231)))
                                 ($stv-a (getNodeSTV $kb $A))
                                 ($_ (println! (sstv aaa $stv-a)))
                                 ($stv-b (getNodeSTV $kb $B)) 
@@ -40,4 +39,4 @@
 
 
 ; !(syllo-deduction (Inheritance rain fall) &kb (S (S Z)) ())
-; !(match &kb (Sentence ((Inheritance $x $y) $stv) $ev) (Sentence ((Inheritance $x $y) $stv) $ev))
+; ; !(match &kb (Sentence ((Inheritance $x $y) $stv) $ev) (Sentence ((Inheritance $x $y) $stv) $ev))
