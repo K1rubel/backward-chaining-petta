@@ -3,6 +3,8 @@
       (match $kb (Sentence ((Inheritance $B $A) $stv-inverse) $ev-inverse) 
             (if (StampDisjoint $ev $ev-inverse)
                   (let* (($stv-a (getNodeSTV $kb $A))
+                        ;; actually the above step could be done using anther pln-bc call back since the stv value od node $A could be backward chained 
+                        ;; for the time being lets just assume if it is not available via direct lookup we'll use (stv 0.5 0) as good as saying "we dont know nothing about the atom"
                         ($tv-goal (Truth_inversion $stv-a $stv-inverse))
                         ($ev-final (StampConcat $ev $ev-inverse))
                         ($_ (add-atom $kb (Sentence ($goal $tv-goal) $ev-final))))
