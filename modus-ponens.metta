@@ -1,18 +1,31 @@
 (= (modus-ponens $kb $goal (S $k) $ev)
    ;; 1. Find all matching Rules
-   (match $kb (Sentence ((Implication $premise $goal) $stv) $goal-ev)
-      (if (StampDisjoint $ev $goal-ev)
-          (let* (($next-ev (StampConcat $ev $goal-ev))
-               ;   ($_ (println! (in modus ponens next evidence stamp $next-ev and $k and the premise $premise)))
-                 ((Sentence ($premise $stv-premise) $premise-ev) (pln-bc $kb $premise $k $_))
-               ;   ($_ (println! (out the recursion)))
-                 ($combined-stv (Truth_ModusPonens $stv $stv-premise))
-                 ($evidence-list (StampConcat $premise-ev $next-ev))
-                 ($_ (add-atom $kb (Sentence ($goal $combined-stv) $evidence-list))))
+   (match $kb (Sentence (($link-type $premise $goal) $stv) $goal-ev)
+      (if (and (SyllogisticRuleGuard $link-type)
+                (StampDisjoint $ev $goal-ev))
+              
+              (let* (($next-ev (StampConcat $ev $goal-ev))
+                    ((Sentence ($premise $stv-premise) $premise-ev) (pln-bc $kb $premise $k $next-ev))
+                    ($combined-stv (Truth_ModusPonens $stv $stv-premise))
+                    ($evidence-list (StampConcat $premise-ev $next-ev))
+                    ($_ (add-atom $kb (Sentence ($goal $combined-stv) $evidence-list))))
+                  
+                    (Sentence ($goal $combined-stv) $evidence-list))
                 
-                (Sentence
-                   ($goal $combined-stv) $evidence-list))
-         (empty))))
+              (empty))))
+  ;  (match $kb (Sentence ((Implication $premise $goal) $stv) $goal-ev)
+  ;     (if (StampDisjoint $ev $goal-ev)
+  ;         (let* (($next-ev (StampConcat $ev $goal-ev))
+  ;              ;   ($_ (println! (in modus ponens next evidence stamp $next-ev and $k and the premise $premise)))
+  ;                ((Sentence ($premise $stv-premise) $premise-ev) (pln-bc $kb $premise $k $_))
+  ;              ;   ($_ (println! (out the recursion)))
+  ;                ($combined-stv (Truth_ModusPonens $stv $stv-premise))
+  ;                ($evidence-list (StampConcat $premise-ev $next-ev))
+  ;                ($_ (add-atom $kb (Sentence ($goal $combined-stv) $evidence-list))))
+                
+  ;               (Sentence
+  ;                  ($goal $combined-stv) $evidence-list))
+  ;        (empty))))
 
 ;; Testing modus-ponens
 
