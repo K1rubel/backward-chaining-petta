@@ -5,12 +5,11 @@
                 (if (and (SyllogisticRuleGuard $LinkType)
                          (StampDisjoint $ev $ev-bc))
                         (let* (($next-ev (StampConcat $ev $ev-bc))
-                                ($_ (println! (next ev $next-ev)))
                               ;; Recurse to prove the missing link A -> B
                                 ((Sentence (($LinkType $A $B) $stv-ab) $ev-premise) (pln-bc $kb ($LinkType $A $B) $k $next-ev))
                                 ($stv-a (getNodeSTV $kb $A))
                                 ($_ (println! (sstv aaa $stv-a)))
-                                ($stv-b (getNodeSTV $kb $B)) 
+                                ($stv-b (getNodeSTV $kb $B))
                                 ($_ (println! (sstv bbb $stv-b)))
                                 ($stv-c (getNodeSTV $kb $C)) 
                                 ($_ (println! (sstv ccc $stv-c)))
@@ -22,13 +21,7 @@
                                 (Sentence ($goal $stv-goal) $evidence-list)
                             )
                         (empty)))))                 
-
-(= (getNodeSTV $kb $node)
-   (let $res (collapse (match $kb (Sentence ($node $tv) $_) $tv))
-      (if (== $res ())
-          (stv 0.5 0.0) ;; Complete ignorance default
-          (car-atom $res))))                        
-
+                      
 ; !(bind! &kb (new-space))
 ; !(add-atom &kb (Sentence ((Inheritance rain fall) (stv 0.4 0.52))  (1)))                        
 ; !(add-atom &kb (Sentence ((Inheritance rain fall) (stv 0.4 0.52))  (1)))                        
@@ -39,4 +32,4 @@
 
 
 ; !(syllo-deduction (Inheritance rain fall) &kb (S (S Z)) ())
-; ; !(match &kb (Sentence ((Inheritance $x $y) $stv) $ev) (Sentence ((Inheritance $x $y) $stv) $ev))
+; ; ; !(match &kb (Sentence ((Inheritance $x $y) $stv) $ev) (Sentence ((Inheritance $x $y) $stv) $ev))

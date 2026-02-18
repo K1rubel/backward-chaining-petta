@@ -8,7 +8,7 @@
                         ($tv-goal (Truth_inversion $stv-a $stv-inverse))
                         ($ev-final (StampConcat $ev $ev-inverse))
                         ($_ (add-atom $kb (Sentence ($goal $tv-goal) $ev-final))))
-            
+                        
                         (Sentence ($goal $tv-goal) $ev-final))
                   (empty)))))
 
