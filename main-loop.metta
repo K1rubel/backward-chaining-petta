@@ -4,7 +4,7 @@
 !(import! &self ./modus-ponens)
 !(import! &self ./syllogisitic-deduction)
 !(import! &self ./inversion)
-; !(import! &self ./tests/game-data)
+!(import! &self ./tests/game-data)
 ;; Base case
 (= (pln-bc $kb $goal Z $ev)
    (step-lookup $kb $goal))
@@ -12,10 +12,12 @@
    
 (= (pln-bc $kb $goal (S $k) $ev)
    ;; setup direct lookup for the goal sentence 
-   (match $kb (Sentence ($g $stv) $stamp) 
-               (if (= $g $goal)
-                  (Sentence ($goal $stv) $stamp)
-                  (superpose 
+   (let $direct-lookup (collapse 
+         (match $kb (Sentence ($goal $stv) $stamp) 
+            (Sentence ($goal $stv) $stamp)))
+         (if (!= $direct-lookup ())
+               (superpose $direct-lookup) ;; to stay consistent with the logic below which is a superposition of all the possible 
+               (superpose 
                      (
                         ; (step-lookup $kb $goal)
                         (modus-ponens $kb $goal (S $k) $ev)
@@ -23,12 +25,18 @@
                         (inversion $kb $goal (S $k) $ev)
                      )))))
 
+
+;; I didnt see the use of a revision rule here since all the different paths that lead to the goal get collected in one stamp tuple, it's of no use the user
+;; So instead it is better to just select the best out of the paths found so far                  
 (= (bc-drive $kb $goal $stamp)
    (let $result 
-         (collapse (pln-bc $kb $goal (S (S (S Z))) $stamp))
-         (if (!= $result ())
-            (revision $result)
-            (empty))))            
+         (collapse (let (Sentence ($goal ($stv $s $c)) $evidence) (pln-bc $kb $goal (S (S (S Z))) $stamp)
+            (if (< $c 0.1)
+               (empty)
+               (Sentence ($goal ($stv $s $c)) $evidence))))
+            (if (!= $result ())
+               (let $sorted (sorT $result) (car-atom $sorted))
+               (empty))))            
                               
 ;; Collect all results from all strategies   
 ;; testing direct lookup
@@ -73,16 +81,34 @@
 ; ; !(pln-bc &self 
 ; ;       (Board (Row E (Col O X)) (Rows (Row E (Col X E)) (Row X (Col O E))))
 ; ;       Z ())
-; ; !(pln-bc &self 
-; ;       (GameWin X)
-; ;       (S (S Z)) ())
+; !(pln-bc &self 
+;       (GameWin X)
+;       (S (S Z)) ())
 
+; !(bc-drive &self 
+;       (GameWin X)
+;     ())
 
 ;; Testing inference via inversion -- 
 
-!(add-atom &kb (Sentence ((Inheritance tigers cats) (stv 0.6 0.78)) (1)))
-!(add-atom &kb (Sentence (cats (stv 0.63 0.832)) (12)))
+; !(add-atom &kb (Sentence ((Inheritance tigers cats) (stv 0.6 0.78)) (1)))
+; !(add-atom &kb (Sentence (cats (stv 0.63 0.832)) (12)))
 
 ; !(pln-bc &kb (Inheritance cats tigers) (S (S (S Z))) ())
 ; !(inversion &kb (Inheritance cats tigers) (S (S Z)) ())       
 ; !(bc-drive &kb (Inheritance cats tigers) ()) 
+
+; !(revision 
+; (
+;    (Sentence ((GameWin X) (stv 0.09200000000000001 0.15003)) (557 130))
+
+; (Sentence ((GameWin X) (stv 0.09200000000000001 0.15003)) (537 46))
+; (Sentence ((GameWin X) (stv 0.027200000000000002 0.025010000999999997)) (534 46 536 46))
+; (Sentence ((GameWin X) (stv 0.027200000000000002 0.025010000999999997)) (554 130 556 130))
+; (Sentence ((GameWin X) (stv 0.09200000000000001 0.15003)) (573 250))
+; (Sentence ((GameWin X) (stv 0.027200000000000002 0.025010000999999997)) (570 250 572 250))
+; (Sentence ((GameWin X) (stv 0.09200000000000001 0.15003)) (597 406))
+; (Sentence ((GameWin X) (stv 0.027200000000000002 0.025010000999999997)) (594 406 596 406))))
+
+; !(stampDisjoint (StampDisjoint (537 46) (534 46 536 46)))
+
