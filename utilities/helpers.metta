@@ -7,7 +7,7 @@
             (((stv $combined-c $combined-s) $evidences) 
                 (foldl-atom $rest ($stv1st $ev1st) ($init-stv $ev-acc) 
                 (Sentence ($g $stv) $ev) (if (StampDisjoint $ev-acc $ev)
-                                             ((Truth_Revision $init-stv $stv) (StampConcat $ev $ev-acc))
+                                             ((Truth_Revision $init-stv $stv) (StampConcat $ev-acc $ev))
                                              ($stv1st $ev1st)))))
         (Sentence ($goal (stv (round $combined-c 3) (round $combined-s 3))) $evidences)))        
 
@@ -25,5 +25,26 @@
 ;             (getStv (revision $result))
 ;             (stv 0.5 0))))        
 
-; (= (getStv (Sentence ($atom $stv) $stamp)) $stv)                
+; (= (getStv (Sentence ($atom $stv) $stamp)) $stv) 
+(= (getConfidence (Sentence ($atom (stv $s $c)) $stamp)) $c) 
+
 ; (= (getStamp (Sentence ($atom $stv) $stamp)) $stamp)  
+
+(= (insert-sorted $x ()) ($x))
+
+;; Recursive Case: Compare x with head of list
+(= (insert-sorted $x $expr)
+    (let ($h $t) (decons-atom $expr)   
+        (if (> (getConfidence $x) (getConfidence $h))
+            (cons-atom $x $expr)
+            (let $rest (insert-sorted $x $t)
+                (cons-atom $h (insert-sorted $x $t))))))
+
+;; ============================================================
+;; 3. MAIN SORT FUNCTION
+;; ============================================================
+;; Recursively sorts a list
+(= (sorT ()) ())
+(= (sorT $expr)
+    (let ($h $t) (decons-atom $expr)
+        (insert-sorted $h (sorT $t))))
