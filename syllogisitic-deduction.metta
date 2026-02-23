@@ -1,4 +1,3 @@
-; !(import! &self ../backward-chaining/forward-chaining-pln)
 (= (syllo-deduction $kb $goal (S $k) $ev)
     (let ($LinkType $A $C) $goal
             (match $kb (Sentence (($LinkType $B $C) $stv-bc) $ev-bc)
@@ -6,7 +5,8 @@
                          (StampDisjoint $ev $ev-bc))
                         (let* (($next-ev (StampConcat $ev $ev-bc))
                               ;; Recurse to prove the missing link A -> B
-                                ((Sentence (($LinkType $A $B) $stv-ab) $ev-premise) (pln-bc $kb ($LinkType $A $B) $k $next-ev))
+                                ((Sentence (($LinkType $A $B) $stv-ab) $ev-premise) 
+                                (pln-bc $kb ($LinkType $A $B) $k $next-ev))
                                 ($stv-a (getNodeSTV $kb $A))
                                 ($_ (println! (sstv aaa $stv-a)))
                                 ($stv-b (getNodeSTV $kb $B))
@@ -20,16 +20,4 @@
                                 
                                 (Sentence ($goal $stv-goal) $evidence-list)
                             )
-                        (empty)))))                 
-                      
-; !(bind! &kb (new-space))
-; !(add-atom &kb (Sentence ((Inheritance rain fall) (stv 0.4 0.52))  (1)))                        
-; !(add-atom &kb (Sentence ((Inheritance rain fall) (stv 0.4 0.52))  (1)))                        
-; !(add-atom &kb (Sentence ((Inheritance slippery fall) (stv 0.45 0.752))  (2)))         
-; !(add-atom &kb (Sentence (rain (stv 0.9 0.8)) (3)))               
-; !(add-atom &kb (Sentence (slippery (stv 0.7 0.8)) (4)))               
-; !(add-atom &kb (Sentence (fall (stv 0.6 0.6)) (5)))               
-
-
-; !(syllo-deduction (Inheritance rain fall) &kb (S (S Z)) ())
-; ; ; !(match &kb (Sentence ((Inheritance $x $y) $stv) $ev) (Sentence ((Inheritance $x $y) $stv) $ev))
+                        (empty)))))
