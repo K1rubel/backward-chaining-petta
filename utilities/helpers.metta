@@ -12,10 +12,15 @@
         (Sentence ($goal (stv (round $combined-c 3) (round $combined-s 3))) $evidences)))        
 
 (= (getNodeSTV $kb $node)
-   (let $res (collapse (match $kb (Sentence ($node $tv) $_) $tv))
-      (if (== $res ())
-          (stv 0.5 0.0) ;; Complete ignorance default
-          (car-atom $res))))  
+;; I found this approach to be misleading -- assigning stv values for atoms that are not in the atomspace
+;; The reason -- for a series of moves that need to be have been made prio for a goal state to be reached. implementation below meant that we will arrive at the destination
+;; even if the moves that need to be there has not happened yet
+;    (let $res (collapse (match $kb (Sentence ($node $tv) $_) $tv))
+;       (if (== $res ())
+;           (stv 0.5 0.0) ;; Complete ignorance default
+;           (car-atom $res)))) 
+    (match $kb (Sentence ($node $tv) $_) $tv)) 
+
 
 ;; an alternative definition of getNodeSTV, rather than just a straight look up for the goal in the atomspace
 ;; calls back the main backward chainer inference engine to look fo the goal   
