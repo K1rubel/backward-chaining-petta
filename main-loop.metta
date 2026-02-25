@@ -15,6 +15,8 @@
                         (eval (modus-ponens $kb $goal (S $k) $ev))
                         (eval (syllo-deduction $kb $goal (S $k) $ev))
                         (eval (inversion $kb $goal (S $k) $ev))
+                        (eval (induction $kb $goal (S $k) $ev))
+                        (eval (abduction $kb $goal (S $k) $ev))
                      )))))
 
 

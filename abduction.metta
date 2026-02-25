@@ -1,13 +1,13 @@
 ;; ============================================================
 ;; ABDUCTION RULE (Recursive)
 ;; ============================================================
-!(import! &self ./utilities/forward-chaining-pln)
-!(import! &self ./utilities/helpers)
-!(import! &self ./main-loop)
-!(import! &self ./induction)
+; !(import! &self ./utilities/forward-chaining-pln)
+; !(import! &self ./utilities/helpers)
+; !(import! &self ./main-loop)
+; !(import! &self ./induction)
 (= (abduction $kb $goal (S $k) $ev)
     (let ($link-type $A $B) $goal
-        (if (IsDeductionLink $link-type)
+        (if (SyllogisticRuleGuard $link-type)
             (match $kb (Sentence (($link-type $B $C) $tv-bc) $ev-bc)
                 (if (StampDisjoint $ev $ev-bc)
                     (let* (($next-ev (StampConcat $ev $ev-bc))
@@ -20,13 +20,11 @@
                             (Sentence ($goal $tv-goal) $ev-final))
                     (empty)))
                     (empty))))
-!(bind! &kb (new-space))    
-;; 1. The Facts (Shared Consequent: Flyer)
-!(add-atom &kb (Sentence ((Inheritance Tweety Flyer) (stv 1.0 0.9)) (101)))
-!(add-atom &kb (Sentence ((Inheritance Bird Flyer)   (stv 0.9 0.9)) (102)))
+; !(bind! &kb (new-space))    
+; ;; 1. The Facts (Shared Consequent: Flyer)
+; !(add-atom &kb (Sentence ((Inheritance Tweety Flyer) (stv 1.0 0.9)) (101)))
+; !(add-atom &kb (Sentence ((Inheritance Bird Flyer)   (stv 0.9 0.9)) (102)))
 
-;; 2. The Query
-;; We ask the engine to prove (Inheritance Tweety Bird) with a depth of 2.
-!(abduction &kb (Inheritance Tweety Bird) (S (S Z)) ())                    
-
-!(deduction (IsDeductionLink Inheritance))
+; ;; 2. The Query
+; ;; We ask the engine to prove (Inheritance Tweety Bird) with a depth of 2.
+; !(abduction &kb (Inheritance Tweety Bird) (S (S Z)) ())                    
